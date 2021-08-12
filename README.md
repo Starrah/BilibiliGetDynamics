@@ -10,9 +10,12 @@
 git clone https://github.com/Starrah/BilibiliGetDynamics
 cd BilibiliGetDynamics
 pip install -r requirements.txt
+# 默认会自动下载动态中的图片到pics文件夹内
 python getDynamics.py 12345678
+# 如果不希望自动下载图片（速度会更快），请加--no_download参数：
+# python getDynamics.py 12345678 --no_download
 ```
-将上述12345678换成你要查询的用户的UID即可。（查看UID：浏览器打开用户的个人空间，链接会形如https://space.bilibili.com/xxxxxxxx?from=balabalabala（?之后的部分可能有也可能没有，不用管），space.bilibili.com/后紧跟的那一串数字就是）
+将上述12345678换成你要查询的用户的UID即可。（查看UID：浏览器打开用户的个人空间，链接会形如https://space.bilibili.com/**xxxxxxxx**?from=balabalabala（?之后的部分可能有也可能没有，不用管），space.bilibili.com/ 后面紧跟的那一连串数字就是）
 
 运行过程中会不断打印当前收到的数据。  
 等待最终打印出“已完成”后，打开当前目录下的result.json即可查看结果。
@@ -29,5 +32,5 @@ cardToObj方法对其进行简单的字段筛选以压缩体积，然后保存�
 
 ##### 已知问题&改进方法
 不能正确处理视频动态情况（其实就是筛选字段没有选对，作者懒了）。  
-事实上，第49行（附近）`for card in res["cards"]:`循环内的card变量就是一条动态的完整对象，所有的信息都在这里面，可自行修改获得各种信息。  
+事实上，第93行（附近）`for card in res["cards"]:`循环内的card变量就是一条动态的完整对象，所有的信息都在这里面，可自行修改获得各种信息。  
 更欢迎把您的修改发PR上来。

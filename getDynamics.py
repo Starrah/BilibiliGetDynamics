@@ -1,13 +1,34 @@
 import asyncio
 import json
+import os
 import sys
-
+import argparse
+import aiohttp
 from bilibili_api import user
+
+parser = argparse.ArgumentParser()
+parser.add_argument('uid', nargs=1)
+parser.add_argument('--no_download', action="store_true", help="同时下载动态中的图片")
+args = parser.parse_args()
 
 if len(sys.argv) == 1:
     sys.stderr.write("请输入用户的UID作为参数！")
     exit(1)
 u = user.User(uid=int(sys.argv[1]))
+
+
+async def fetch(session: aiohttp.ClientSession, url: str, path: str):
+    try:
+        async with session.get(url) as resp:
+            with open(path, 'wb') as fd:
+                while 1:
+                    chunk = await resp.content.read(1024)  # 每次获取1024字节
+                    if not chunk:
+                        break
+                    fd.write(chunk)
+        # print("downloaded " + url)
+    except:
+        print("failed " + url)
 
 
 def copyKeys(src, keys):
@@ -60,6 +81,8 @@ async def main():
     with open("result.json", "w", encoding="UTF-8") as f:
         offset = 0
         count = 0
+        if not args.no_download:
+            os.makedirs("pics", exist_ok=True)
         while True:
             if offset != 0:
                 f.write(",")
@@ -70,6 +93,14 @@ async def main():
             for card in res["cards"]:
                 f.write(",\n" if count > 0 else "[\n")
                 cardObj = cardToObj(card)
+                if not args.no_download:
+                    tasks = []
+                    async with aiohttp.ClientSession() as session:
+                        if "pictures" in cardObj["item"]:
+                            for pic_url in cardObj["item"]["pictures"]:
+                                task = fetch(session, pic_url, os.path.join("pics", os.path.basename(pic_url)))
+                                tasks.append(task)
+                            await asyncio.gather(*tasks)
                 cardStr = str(cardObj)
                 f.write(cardStr)
                 print(cardStr)
