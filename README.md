@@ -15,7 +15,7 @@ python getDynamics.py 12345678
 # 如果不希望自动下载图片（速度会更快），请加--no_download参数：
 # python getDynamics.py 12345678 --no_download
 ```
-将上述12345678换成你要查询的用户的UID即可。（查看UID：浏览器打开用户的个人空间，链接会形如https://space.bilibili.com/**xxxxxxxx**?from=balabalabala（?之后的部分可能有也可能没有，不用管），space.bilibili.com/ 后面紧跟的那一连串数字就是）
+将上述12345678换成你要查询的用户的UID即可。（查看UID：浏览器打开用户的个人空间，链接会形如https://space.bilibili.com/xxxxxxxx?from=balabalabala （?之后的部分可能有也可能没有，不用管），space.bilibili.com/ 后面紧跟的那一连串数字就是）
 
 运行过程中会不断打印当前收到的数据。  
 等待最终打印出“已完成”后，打开当前目录下的result.json即可查看结果。
