@@ -19,9 +19,25 @@ def copyKeys(src, keys):
 
 
 def getItem(input):
+    if "item" in input:
+        return getItem(input["item"])
+    if "videos" in input:
+        return getVideoItem(input)
+    else:
+        return getNormal(input)
+
+
+def getNormal(input):
     res = copyKeys(input, ['description', 'pictures', 'content'])
     if "pictures" in res:
         res["pictures"] = [pic["img_src"] for pic in res["pictures"]]
+    return res
+
+
+def getVideoItem(input):
+    res = copyKeys(input, ['title', 'desc', 'dynamic', 'short_link', 'stat', 'tname'])
+    res["av"] = input["aid"]
+    res["pictures"] = [input["pic"]]
     return res
 
 
@@ -29,11 +45,12 @@ def cardToObj(input):
     res = {
         "dynamic_id": input["desc"]["dynamic_id"],
         "timestamp": input["desc"]["timestamp"],
-        "item": getItem(input["card"]["item"])
+        "type": input["desc"]["type"],
+        "item": getItem(input["card"])
     }
     if "origin" in input["card"]:
         originObj = json.loads(input["card"]["origin"])
-        res["origin"] = getItem(originObj["item"])
+        res["origin"] = getItem(originObj)
         if "user" in originObj and "name" in originObj["user"]:
             res["origin_user"] = originObj["user"]["name"]
     return res
