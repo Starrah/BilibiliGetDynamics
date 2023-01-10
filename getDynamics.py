@@ -9,6 +9,7 @@ from bilibili_api import user
 parser = argparse.ArgumentParser()
 parser.add_argument('uid', nargs=1)
 parser.add_argument('--no_download', action="store_true", help="同时下载动态中的图片")
+parser.add_argument('--full_json', action="store_true", help="输出动态完整数据")
 args = parser.parse_args()
 
 if len(sys.argv) == 1:
@@ -78,14 +79,14 @@ def cardToObj(input):
 
 
 async def main():
-    with open("result.json", "w", encoding="UTF-8") as f:
+    with open(f'{sys.argv[1]}-result.json', "w", encoding="UTF-8") as f:
         offset = 0
         count = 0
         if not args.no_download:
             os.makedirs("pics", exist_ok=True)
         while True:
-            if offset != 0:
-                f.write(",")
+            # if offset != 0:
+            #     f.write(",")
             res = await u.get_dynamics(offset)
             if res["has_more"] != 1:
                 break
@@ -101,7 +102,10 @@ async def main():
                                 task = fetch(session, pic_url, os.path.join("pics", os.path.basename(pic_url)))
                                 tasks.append(task)
                             await asyncio.gather(*tasks)
-                cardStr = str(cardObj)
+                if not args.full_json:
+                    cardStr = json.dumps(card,ensure_ascii=False)
+                else:
+                    cardStr = json.dumps(cardObj,ensure_ascii=False)
                 f.write(cardStr)
                 print(cardStr)
                 count += 1

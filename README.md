@@ -14,17 +14,19 @@ pip install -r requirements.txt
 python getDynamics.py 12345678
 # 如果不希望自动下载图片（速度会更快），请加--no_download参数：
 # python getDynamics.py 12345678 --no_download
+# 如果希望获取所有信息，请加--full_json参数：
+# python getDynamics.py 12345678 --full_json
 ```
 将上述12345678换成你要查询的用户的UID即可。（查看UID：浏览器打开用户的个人空间，链接会形如https://space.bilibili.com/xxxxxxxx?from=balabalabala （?之后的部分可能有也可能没有，不用管），space.bilibili.com/ 后面紧跟的那一连串数字就是）
 
 运行过程中会不断打印当前收到的数据。  
-等待最终打印出“已完成”后，打开当前目录下的result.json即可查看结果。
+等待最终打印出“已完成”后，打开当前目录下的`{uid}-result.json`即可查看结果。
 
 #### 实现说明
 （只有一个文件getDynamics.py、60几行代码，其实有个几分钟从上到下过一下就全看懂了）
 
 ##### 代码概述
-基于[bilibili-api](https://github.com/Passkou/bilibili-api) 库开发，利用其中封装的User.get_dynamics接口请求json数据。 
+基于[bilibili-api](https://github.com/Nemo2011/bilibili-api) 库开发，利用其中封装的User.get_dynamics接口请求json数据。 
 主函数是main函数，里面用一个循环调用get_dynamics接口，开始时用offset=0调用
 期间每次请求都会返回一个offset，需要在下一次请求时作为参数传入，从而依次请求各个页面。  
 请求到的数据是一个cards数组、每个元素表示一条动态。  
