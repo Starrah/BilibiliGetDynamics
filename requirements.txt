@@ -1,2 +1,2 @@
-bilibili_api
+bilibili-api-python
 aiohttp
