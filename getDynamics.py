@@ -103,9 +103,9 @@ async def main():
                                 tasks.append(task)
                             await asyncio.gather(*tasks)
                 if not args.full_json:
-                    cardStr = json.dumps(card,ensure_ascii=False)
-                else:
                     cardStr = json.dumps(cardObj,ensure_ascii=False)
+                else:
+                    cardStr = json.dumps(card,ensure_ascii=False)
                 f.write(cardStr)
                 print(cardStr)
                 count += 1
